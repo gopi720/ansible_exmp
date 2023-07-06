@@ -1,0 +1,38 @@
+- name: print msg
+  hosts: jenkins_server, tomcat_server
+  tasks:
+  - name: printing given msg
+    debug:
+      msg: "hiii this is gopi"
+  - name: adding user
+    user:
+      name: gopi
+      shell: /bin/bash
+      create_home: yes
+    become: yes
+  - name: installing java
+    apt:
+      name: openjdk-11-jdk
+      update_cache: yes
+      state: present
+    become: yes
+  - name: printing java version
+    shell: java -version
+    register: java_version
+  - name: printing java version
+    debug:
+      msg: "{{java_version}}"
+- name: tomcat play
+  hosts: tomcat_server
+  tasks:
+  - name: install tommcat11
+    get_url:
+      url: https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.76/bin/apache-tomcat-9.0.76.tar.gz
+      dest: /home/ubuntu
+      mode: 0755
+  - name: unzip tomcat
+    unarchive:
+      src: /home/ubuntu/apache-tomcat-9.0.76.tar.gz
+      dest: /home/ubuntu
+      remote_src: true
+    become: yes
