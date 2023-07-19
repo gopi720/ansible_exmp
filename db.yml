@@ -1,0 +1,43 @@
+- name: mysql play
+  hosts: ansible
+  tasks:
+  - name: installing mysql and dependies
+    package:
+     name: "{{item}}"
+     state: present
+     update_cache: yes
+    loop: 
+     - mysql-server
+     - mysql-client 
+     - python3-mysqldb
+     - libmysqlclient-dev
+    become: yes
+  - name: start and enable mysql server
+    service:
+     name: mysql
+     state: started  
+     enabled: yes
+  - name: create a user for mysql
+    mysql_user:
+     name: gopi
+     password: gopi
+     priv: '*.*:ALL'
+     host: '%'
+     state: present 
+    become: yes
+  - name: creating new db
+    mysql_db:
+      name: mydb
+      state: present      
+    become: yes 
+  - name: copy db files
+    copy:
+     src: dump.sql
+     dest: /tmp/dump.sql
+    become: yes 
+  - name: inseet table
+    mysql_db:
+     name: mydb
+     state: import
+     target: /tmp/dump.sql
+    become: yes     

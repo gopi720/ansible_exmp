@@ -1,0 +1,27 @@
+- name: terraform installation
+  hosts: all
+  tasks:
+   - name: install terraform
+     get_url:
+      url: https://releases.hashicorp.com/terraform/1.2.9/terraform_1.2.9_linux_amd64.zip
+      dest: /home/vagrant
+   - name: install unzip
+     apt:
+       name: "unzip"
+       state: present
+       update_cache: yes
+     become: yes
+     become_method: sudo
+   - name: unzip tomcat
+     unarchive:
+       src: /home/vagrant/terraform_1.2.9_linux_amd64.zip
+       dest: /usr/local/bin
+       remote_src: true
+     become: yes
+     become_method: sudo
+   - name: getting version of terrafom
+      shell: "terraform --version"
+      register: version
+   - name: printing terraform version
+      degub:
+        msg: "{{version.stdout}}"  

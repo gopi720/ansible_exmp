@@ -1,0 +1,11 @@
+- name: jinja2 example
+  hosts: all
+  vars:
+    name: "gopi"
+    village: "west gangavaram"
+    study: "Btech"
+  tasks:
+  - name: jinja2 task
+    template:
+      src: jinja2.j2
+      dest: myworld.txt

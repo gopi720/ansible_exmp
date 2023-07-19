@@ -1,0 +1,9 @@
+- name: whenfailed play
+  hosts: all
+  tasks:
+    - name: fing disk apace
+      shell: "df /dev/sda1 | tail -1 | awk '{print $4}'"
+      register: dbspace
+      failed_when: "{{dbspace.stdout}} < 37485704"
+    - name: installing 
+    
